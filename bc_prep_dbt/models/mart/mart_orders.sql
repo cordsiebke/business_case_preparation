@@ -9,21 +9,16 @@ customers as (
 		*
 		from {{ ref('stage_customers') }}
 		)
-,
-customer_subscriptions as (
-		select
-		*
-		from {{ ref('stage_customer_subscriptions') }}
-		)
 select
-c.*,
-cs.start_date,
-cs.end_date,
+c.id as customer_id,
+c.country,
+c.date_acquired,
+c.customer_migration_flag,
+c.customer_merge_flag,
+o.id as order_id,
 o.order_migration_flag,
 o.date_shipped,
-o.total_amount_billed_retail_gross as gross_basket
+o.gross_basket
 from orders o
 join customers c 
-on o.customer_id = c.customer_id
-left join customer_subscriptions cs
-on c.id = cs.customer_id
+on o.customer_id = c.id
