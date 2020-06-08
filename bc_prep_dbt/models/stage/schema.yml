@@ -2,8 +2,8 @@
 version: 2
 
 models:
-    - name: my_first_dbt_model
-      description: "A starter dbt model"
+    - name: stage_customers
+      description: "Contains information to the customers."
       columns:
           - name: id
             description: "The primary key for this table"
@@ -11,10 +11,18 @@ models:
                 - unique
                 - not_null
 
-    - name: my_second_dbt_model
-      description: "A starter dbt model"
+    - name: stage_orders
+      description: "Contains information to all shipped orders."
       columns:
           - name: id
+            description: "The primary key for this table"
+            tests:
+                - unique
+                - not_null
+    - name: stage_customer_subscriptions
+      description: "Contains sub- & unsub- scription dates per customer to the subscription model."
+      columns:
+          - name: customer_id
             description: "The primary key for this table"
             tests:
                 - unique
