@@ -3,12 +3,20 @@ with base as (
 			*
 			from {{ ref('stage_base_table') }}
 			),
+size as (
+			select
+			date(date_trunc('month', date_acquired)) as cohort_month,
+			country,
+			count(*) as cohort_size
+			from {{ ref('stage_customers') }}
+			group by 1,2
+			),
 orders as (
 			SELECT
 			date(date_trunc('month', date_acquired)) as cohort_month,
 			date(date_trunc('month', date_shipped)) as ship_month,
 			country,
-			count(*) as amount_boxes,
+			count(*) as amount_orders,
 			sum(gross_basket) as revenue,
 			count(distinct customer_id) as amount_customer
 			from {{ ref('mart_orders') }} 
@@ -34,12 +42,22 @@ unsubscriptions as (
 			)
 select
 b.*,
-o.amount_boxes,
-o.revenue,
+size.cohort_size,
 o.amount_customer,
+o.amount_orders,
+sum(o.amount_orders) over (partition by b.cohort_month, b.country order by b.lifetime_month asc rows between unbounded preceding and current row) as cumulated_amount_orders,
+o.revenue,
+sum(o.revenue) over (partition by b.cohort_month, b.country order by b.lifetime_month asc rows between unbounded preceding and current row) as cumulated_revenue,
 s.amount_subscriptions,
-u.amount_unsubscriptions
+sum(s.amount_subscriptions) over (partition by b.cohort_month, b.country order by b.lifetime_month asc rows between unbounded preceding and current row) as cumulated_amount_subscriptions,
+u.amount_unsubscriptions,
+sum(u.amount_unsubscriptions) over (partition by b.cohort_month, b.country order by b.lifetime_month asc rows between unbounded preceding and current row) as cumulated_amount_unsubscriptions,
+sum(s.amount_subscriptions) over (partition by b.cohort_month, b.country order by b.lifetime_month asc rows between unbounded preceding and current row) 
+	- sum(u.amount_unsubscriptions) over (partition by b.cohort_month, b.country order by b.lifetime_month asc rows between unbounded preceding and current row) as amount_active_subscriber
 from base b 
+left join size  
+on b.cohort_month = size.cohort_month
+and b.country = size.country
 left join orders o 
 on b.cohort_month = o.cohort_month
 and b.action_month = o.ship_month
