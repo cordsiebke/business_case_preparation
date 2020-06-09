@@ -19,11 +19,20 @@ models:
             tests:
                 - unique
                 - not_null
-    - name: stage_customer_subscriptions
+    - name: stage_subscriptions
       description: "Contains sub- & unsub- scription dates per customer to the subscription model."
       columns:
-          - name: customer_id
+          - name: id
             description: "The primary key for this table"
             tests:
                 - unique
                 - not_null
+    - name: mart_cohorts
+      description: "The dimension of the table is based on the cohorts and all metrics for each point in time (action months). "
+      columns:
+          - name: cohort_month
+            description: "The month of cohort creation"
+          - name: action_month
+            description: "The month of an action happening (e.g. order placed, customer subscribed)"
+
+            
