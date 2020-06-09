@@ -8,7 +8,7 @@
 with base as (
 			select
 			*
-			from {{ ref('stage_base_table') }}
+			from {{ ref('mart_base_table') }}
 			),
 size as (
 			select

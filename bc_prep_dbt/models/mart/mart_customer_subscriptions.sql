@@ -1,7 +1,11 @@
 with subscriptions as (
 		select
-		*
-		from {{ ref('stage_customer_subscriptions') }}
+		customer_id,
+		min(start_date) as start_date,
+		max(end_date) as end_date
+		from {{ ref('stage_subscriptions') }}
+		where customer_id is not null
+		group by 1
 		)
 ,
 customers as (

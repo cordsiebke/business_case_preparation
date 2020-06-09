@@ -1,7 +1,6 @@
 WITH SOURCE AS
   ( SELECT *
-   FROM {{ ref('input_orders') }} 
-   WHERE order_migration_flag = 'f'
+   FROM prep.input_orders
    )
 SELECT *
 FROM SOURCE

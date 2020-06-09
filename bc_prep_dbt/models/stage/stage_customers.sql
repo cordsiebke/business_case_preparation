@@ -1,7 +1,6 @@
 WITH SOURCE AS
   ( SELECT *
-   FROM {{ ref('input_customers') }} 
-   WHERE (customer_migration_flag = 'f' AND customer_merge_flag = 'f')
-   )
+   FROM prep.input_customers
+  )
 SELECT *
 FROM SOURCE
