@@ -20,7 +20,7 @@ models:
                 - unique
                 - not_null
     - name: stage_subscriptions
-      description: "Contains sub- & unsub- scription dates per customer to the subscription model."
+      description: "Contains sub- & unsub- scription dates to the subscription model."
       columns:
           - name: id
             description: "The primary key for this table"
