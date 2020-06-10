@@ -144,3 +144,6 @@ logs/
 
 # Mac OS
 .DS_Store
+
+# env
+#bc-env/
