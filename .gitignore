@@ -146,4 +146,4 @@ logs/
 .DS_Store
 
 # env
-#bc-env/
+bc-env/
